@@ -2,7 +2,8 @@
 #include "bot.h"
 #include "curl_handle.h"
 
-#include <optional>
+#include <iostream>
+#include <string>
 
 void Bot::send_message(const std::string &message)
 {
@@ -12,6 +13,6 @@ void Bot::send_message(const std::string &message)
     std::string result;
     auto code = Curl::perform(result, url);
     if (code != CURLE_OK) {
-        curl_easy_strerror(code);
+        std::cerr << curl_easy_strerror(code);
     }
 }
