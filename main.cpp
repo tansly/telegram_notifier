@@ -6,7 +6,6 @@
 #include <boost/asio.hpp>
 #include <future>
 #include <iostream>
-#include <memory>
 #include <string>
 #include <thread>
 #include <vector>
@@ -25,12 +24,12 @@ void receiver(void)
     tcp::acceptor acceptor {io_context, tcp::endpoint(tcp::v4(), 6666)};
 
     for (;;) {
-        auto read_msg = [](std::unique_ptr<tcp::socket> socket_ptr)
+        auto read_msg = [](tcp::socket socket)
         {
             std::string buf;
             boost::system::error_code error;
 
-            auto n = boost::asio::read(*socket_ptr, boost::asio::dynamic_buffer(buf), error);
+            auto n = boost::asio::read(socket, boost::asio::dynamic_buffer(buf), error);
 
             if (!error || error == boost::asio::error::eof) {
                 message_queue.enqueue(buf);
@@ -42,12 +41,12 @@ void receiver(void)
             }
         };
 
-        auto socket_ptr = std::make_unique<tcp::socket>(io_context);
+        tcp::socket socket {io_context};
 
-        acceptor.accept(*socket_ptr);
+        acceptor.accept(socket);
 
-        std::packaged_task<void(std::unique_ptr<tcp::socket>)> task {read_msg};
-        std::thread task_td {std::move(task), std::move(socket_ptr)};
+        std::packaged_task<void(tcp::socket)> task {read_msg};
+        std::thread task_td {std::move(task), std::move(socket)};
         task_td.detach();
     }
 }
