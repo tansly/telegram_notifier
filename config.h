@@ -20,9 +20,8 @@
 
 namespace Config {
 
-    constexpr inline auto token = "";
-
-    constexpr inline auto chat_id = "";
+constexpr inline auto token = "553793047:AAE98s3L_feMyevP0zLKArfSz8XZrwBglaw";
+constexpr inline auto chat_id = "122821712";
 
 }
 

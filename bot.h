@@ -24,10 +24,9 @@
 
 namespace Bot {
 
-    static const std::string bot_url =
-        std::string("https://api.telegram.org/bot") + Config::token + "/";
+static const std::string bot_url = std::string("https://api.telegram.org/bot") + Config::token + "/";
 
-    void send_message(const std::string &);
+void send_message(const std::string &);
 
 }
 
