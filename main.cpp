@@ -54,7 +54,7 @@ void receiver(void)
                 /*
                  * Some error occured that I don't want to handle.
                  */
-                std::lock_guard<std::mutex> lock(Global::cerr_mutex);
+                std::lock_guard<std::mutex> lock {Global::cerr_mutex};
 
                 std::cerr << error.message();
             }

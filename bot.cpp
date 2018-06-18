@@ -34,7 +34,7 @@ void Bot::send_message(const std::string &message)
     std::string result;
     auto code = Curl::perform(result, url);
     if (code != CURLE_OK) {
-        std::lock_guard<std::mutex> lock(Global::cerr_mutex);
+        std::lock_guard<std::mutex> lock {Global::cerr_mutex};
 
         std::cerr << curl_easy_strerror(code);
     }
