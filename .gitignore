@@ -1,4 +1,4 @@
-main
+telegrambotd
 *.o
 *.so
 *.out
