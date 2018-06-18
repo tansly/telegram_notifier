@@ -61,7 +61,7 @@ void receiver(void)
                  */
                 std::lock_guard<std::mutex> lock {Global::cerr_mutex};
 
-                std::cerr << error.message() << std::endl;
+                std::cerr << "receiver(): " << error.message() << std::endl;
             }
         };
 
