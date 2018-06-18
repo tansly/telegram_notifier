@@ -73,5 +73,5 @@ std::optional<Json::Value> Bot::get_updates(int offset, int timeout)
         return {};
     }
 
-    return { updates };
+    return {updates};
 }
