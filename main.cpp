@@ -18,18 +18,16 @@
 #include "bot.h"
 #include "config.h"
 #include "curl_handle.h"
+#include "global.h"
 #include "queue.h"
 
 #include <boost/asio.hpp>
 #include <future>
 #include <iostream>
+#include <mutex>
 #include <string>
 #include <thread>
 #include <vector>
-
-/*
- * TODO: Mutex on std::cout, std::cerr?
- */
 
 namespace {
 
@@ -56,6 +54,8 @@ void receiver(void)
                 /*
                  * Some error occured that I don't want to handle.
                  */
+                std::lock_guard<std::mutex> lock(Global::cerr_mutex);
+
                 std::cerr << error.message();
             }
         };

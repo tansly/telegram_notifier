@@ -18,9 +18,13 @@
 #include "config.h"
 #include "bot.h"
 #include "curl_handle.h"
+#include "global.h"
 
 #include <iostream>
+#include <mutex>
 #include <string>
+
+extern std::mutex cerr_mutex;
 
 void Bot::send_message(const std::string &message)
 {
@@ -30,6 +34,8 @@ void Bot::send_message(const std::string &message)
     std::string result;
     auto code = Curl::perform(result, url);
     if (code != CURLE_OK) {
+        std::lock_guard<std::mutex> lock(Global::cerr_mutex);
+
         std::cerr << curl_easy_strerror(code);
     }
 }
