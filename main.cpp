@@ -22,6 +22,7 @@
 #include "queue.h"
 
 #include <boost/asio.hpp>
+#include <ctime>
 #include <future>
 #include <iostream>
 #include <mutex>
@@ -49,6 +50,9 @@ void receiver(void)
             boost::asio::read(socket, boost::asio::dynamic_buffer(buf), error);
 
             if (!error || error == boost::asio::error::eof) {
+                auto now = std::time(nullptr);
+                buf.insert(0, std::ctime(&now));
+
                 message_queue.enqueue(buf);
             } else {
                 /*
