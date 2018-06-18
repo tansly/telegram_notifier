@@ -1,0 +1,8 @@
+main
+*.o
+*.so
+*.out
+*.swp
+.color_coded
+.syntastic_cpp_config
+.clang_complete
