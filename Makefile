@@ -1,9 +1,19 @@
 CXX=g++
-CXXFLAGS=-std=c++17 -O2 $(shell curl-config --cflags) -pthread -Wall
+CXXFLAGS=-std=c++17 $(shell curl-config --cflags) -pthread -Wall
 LDFLAGS=$(shell curl-config --libs) -pthread -lboost_system
+STRIP=strip
 
 .PHONY: all
-all: telegrambotd
+all: debug
+
+.PHONY: debug
+debug: CXXFLAGS+=-ggdb -Og
+debug: telegrambotd
+
+.PHONY: release
+release: CXXFLAGS+=-O2
+release: telegrambotd
+	$(STRIP) telegrambotd
 
 bot.o: bot.h config.h curl_handle.h global.h bot.cpp
 
