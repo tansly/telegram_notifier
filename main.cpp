@@ -48,7 +48,7 @@ void receiver(void)
             std::string buf;
             boost::system::error_code error;
 
-            auto n = boost::asio::read(socket, boost::asio::dynamic_buffer(buf), error);
+            boost::asio::read(socket, boost::asio::dynamic_buffer(buf), error);
 
             if (!error || error == boost::asio::error::eof) {
                 message_queue.enqueue(buf);
