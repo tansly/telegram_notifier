@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include <optional>
+#include <json/json.h>
 #include <string>
 
 namespace Bot {
@@ -27,6 +29,8 @@ namespace Bot {
 static const std::string bot_url = std::string("https://api.telegram.org/bot") + Config::token + "/";
 
 void send_message(const std::string &);
+
+std::optional<Json::Value> get_updates(int offset=0, int timeout=60);
 
 }
 

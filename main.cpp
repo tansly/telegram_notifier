@@ -21,6 +21,7 @@
 #include "global.h"
 #include "queue.h"
 
+#include <json/json.h>
 #include <boost/asio.hpp>
 #include <ctime>
 #include <future>
@@ -60,7 +61,7 @@ void receiver(void)
                  */
                 std::lock_guard<std::mutex> lock {Global::cerr_mutex};
 
-                std::cerr << error.message();
+                std::cerr << error.message() << std::endl;
             }
         };
 
@@ -81,12 +82,39 @@ void transmitter(void)
     }
 }
 
+void update_handler(void)
+{
+    int offset = 0;
+    for (;;) {
+        auto maybe_updates = Bot::get_updates(offset);
+        if (maybe_updates) {
+            auto updates = *maybe_updates;
+            if (!updates["ok"].asBool()) {
+                continue;
+            }
+
+            auto results = updates["result"];
+            if (results.size() == 0) {
+                continue;
+            }
+
+            auto result = results[0];
+            offset = result["update_id"].asInt() + 1;
+            
+            /*
+             * TODO: Respond to commands.
+             */
+        }
+    }
+}
+
 }
 
 int main(int argc, char **argv)
 {
     std::thread receive_thread {receiver};
     std::thread transmit_thread {transmitter};
+    std::thread update_thread {update_handler};
 
     receive_thread.join();
     transmit_thread.join();

@@ -1,6 +1,6 @@
 CXX=g++
 CXXFLAGS=-std=c++17 $(shell curl-config --cflags) -pthread -Wall
-LDFLAGS=$(shell curl-config --libs) -pthread -lboost_system
+LDFLAGS=$(shell curl-config --libs) -pthread -lboost_system -ljsoncpp
 STRIP=strip
 
 .PHONY: all

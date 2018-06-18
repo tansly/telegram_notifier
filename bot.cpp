@@ -21,10 +21,12 @@
 #include "global.h"
 
 #include <iostream>
+#include <json/json.h>
+#include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
-
-extern std::mutex cerr_mutex;
+#include <sstream>
 
 void Bot::send_message(const std::string &message)
 {
@@ -36,6 +38,40 @@ void Bot::send_message(const std::string &message)
     if (code != CURLE_OK) {
         std::lock_guard<std::mutex> lock {Global::cerr_mutex};
 
-        std::cerr << curl_easy_strerror(code);
+        std::cerr << curl_easy_strerror(code) << std::endl;
     }
+}
+
+std::optional<Json::Value> Bot::get_updates(int offset, int timeout)
+{
+    std::string curl_result;
+    std::ostringstream url_stream {bot_url + "getUpdates?", std::ios_base::ate};
+
+    url_stream << "timeout=" << timeout << '&';
+    url_stream << "offset=" << offset << '&';
+
+    auto code = Curl::perform(curl_result, url_stream.str());
+    if (code != CURLE_OK) {
+        std::lock_guard<std::mutex> lock {Global::cerr_mutex};
+
+        std::cerr << curl_easy_strerror(code) << std::endl;
+
+        return {};
+    }
+
+    Json::CharReaderBuilder builder;
+    std::unique_ptr<Json::CharReader> reader {builder.newCharReader()};
+    Json::Value updates;
+    std::string errors;
+    if (!reader->parse(curl_result.c_str(), curl_result.c_str() + curl_result.size(),
+                &updates, &errors)) {
+
+        std::lock_guard<std::mutex> lock {Global::cerr_mutex};
+
+        std::cerr << errors << std::endl;
+
+        return {};
+    }
+
+    return { updates };
 }
