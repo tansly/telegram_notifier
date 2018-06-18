@@ -1,0 +1,14 @@
+[Unit]
+Description=Telegram notifier bot
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/telegrambotd
+Restart=always
+TimeoutSec=60
+User=telegram_bot
+Group=telegram_bot
+
+[Install]
+WantedBy=multi-user.target
