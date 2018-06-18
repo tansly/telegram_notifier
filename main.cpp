@@ -31,7 +31,9 @@
  * TODO: Mutex on std::cout, std::cerr?
  */
 
-static Queue<std::string> message_queue;
+namespace {
+
+Queue<std::string> message_queue;
 
 void receiver(void)
 {
@@ -73,6 +75,8 @@ void transmitter(void)
     for (;;) {
         Bot::send_message(message_queue.dequeue());
     }
+}
+
 }
 
 int main(int argc, char **argv)
