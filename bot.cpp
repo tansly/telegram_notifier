@@ -40,6 +40,11 @@ void Bot::send_message(const std::string &message)
 
         std::cerr << "Bot::send_message(): " << curl_easy_strerror(code) << std::endl;
     }
+
+    /*
+     * TODO: Check the result object and print some error message
+     * if the Telegram api responded with an error.
+     */
 }
 
 std::optional<Json::Value> Bot::get_updates(int offset, int timeout)
