@@ -21,6 +21,7 @@
 #include "global.h"
 #include "queue.h"
 
+#include <atomic>
 #include <json/json.h>
 #include <boost/asio.hpp>
 #include <condition_variable>
@@ -39,6 +40,8 @@ Queue<std::string> message_queue;
 bool transmit = true;
 std::mutex transmit_mutex;
 std::condition_variable transmit_cond;
+
+std::atomic_bool notify = true;
 
 void receiver(void)
 {
@@ -89,7 +92,7 @@ void transmitter(void)
         transmit_cond.wait(transmit_lock, []{ return transmit; });
         transmit_lock.unlock();
 
-        Bot::send_message(message);
+        Bot::send_message(message, notify);
     }
 }
 
@@ -119,6 +122,9 @@ void update_handler(void)
             }
 
             auto command = message["text"].asString();
+            /*
+             * TODO: Implement a callback mechanism?
+             */
             if (command == "/pause") {
                 std::lock_guard<std::mutex> lock {transmit_mutex};
 
@@ -128,6 +134,10 @@ void update_handler(void)
 
                 transmit = true;
                 transmit_cond.notify_one();
+            } else if (command == "/notifyoff") {
+                notify = false;
+            } else if (command == "/notifyon") {
+                notify = true;
             }
         }
     }

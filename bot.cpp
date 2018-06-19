@@ -28,10 +28,19 @@
 #include <string>
 #include <sstream>
 
-void Bot::send_message(const std::string &message)
+namespace {
+
+constexpr auto bool_to_string(bool b)
 {
-    auto url = bot_url + "sendMessage?chat_id=" + Config::chat_id + "&text=" +
-        Curl::escape(message);
+    return b ? "true" : "false";
+}
+
+}
+
+void Bot::send_message(const std::string &message, bool notify)
+{
+    auto url = bot_url + "sendMessage?chat_id=" + Config::chat_id +
+        "&disable_notification=" + bool_to_string(!notify) + "&text=" + Curl::escape(message);
 
     std::string result;
     auto code = Curl::perform(result, url);
