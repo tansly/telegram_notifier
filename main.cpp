@@ -83,11 +83,13 @@ void receiver(void)
 void transmitter(void)
 {
     for (;;) {
+        auto message = message_queue.dequeue();
+
         std::unique_lock<std::mutex> transmit_lock {transmit_mutex};
         transmit_cond.wait(transmit_lock, []{ return transmit; });
         transmit_lock.unlock();
 
-        Bot::send_message(message_queue.dequeue());
+        Bot::send_message(message);
     }
 }
 
