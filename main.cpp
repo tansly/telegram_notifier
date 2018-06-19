@@ -23,6 +23,7 @@
 
 #include <json/json.h>
 #include <boost/asio.hpp>
+#include <condition_variable>
 #include <ctime>
 #include <future>
 #include <iostream>
@@ -34,6 +35,10 @@
 namespace {
 
 Queue<std::string> message_queue;
+
+bool transmit = true;
+std::mutex transmit_mutex;
+std::condition_variable transmit_cond;
 
 void receiver(void)
 {
@@ -78,7 +83,13 @@ void receiver(void)
 void transmitter(void)
 {
     for (;;) {
-        Bot::send_message(message_queue.dequeue());
+        auto message = message_queue.dequeue();
+
+        std::unique_lock<std::mutex> transmit_lock {transmit_mutex};
+        transmit_cond.wait(transmit_lock, []{ return transmit; });
+        transmit_lock.unlock();
+
+        Bot::send_message(message);
     }
 }
 
@@ -100,10 +111,24 @@ void update_handler(void)
 
             auto result = results[0];
             offset = result["update_id"].asInt() + 1;
-            
-            /*
-             * TODO: Respond to commands.
-             */
+
+            auto message = result["message"];
+            auto chat_id = message["chat"]["id"].asString();
+            if (chat_id != Config::chat_id) {
+                continue;
+            }
+
+            auto command = message["text"].asString();
+            if (command == "/pause") {
+                std::lock_guard<std::mutex> lock {transmit_mutex};
+
+                transmit = false;
+            } else if (command == "/continue") {
+                std::lock_guard<std::mutex> lock {transmit_mutex};
+
+                transmit = true;
+                transmit_cond.notify_one();
+            }
         }
     }
 }
