@@ -25,7 +25,6 @@
 #include <json/json.h>
 #include <boost/asio.hpp>
 #include <condition_variable>
-#include <ctime>
 #include <future>
 #include <iostream>
 #include <mutex>
@@ -58,13 +57,6 @@ void receiver(void)
         boost::asio::read(socket, boost::asio::dynamic_buffer(buf), error);
 
         if (!error || error == boost::asio::error::eof) {
-            auto now = std::time(nullptr);
-            /*
-             * FIXME: Note that std::ctime is marked obsolete by POSIX.
-             * Also, IT IS NOT THREAD-SAFE.
-             */
-            buf.insert(0, std::ctime(&now));
-
             message_queue.enqueue(std::move(buf));
         } else {
             /*
