@@ -59,9 +59,13 @@ void receiver(void)
 
         if (!error || error == boost::asio::error::eof) {
             auto now = std::time(nullptr);
+            /*
+             * FIXME: Note that std::ctime is marked obsolete by POSIX.
+             * Also, IT IS NOT THREAD-SAFE.
+             */
             buf.insert(0, std::ctime(&now));
 
-            message_queue.enqueue(buf);
+            message_queue.enqueue(std::move(buf));
         } else {
             /*
              * Some error occured that I don't want to handle.
