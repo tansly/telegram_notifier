@@ -50,29 +50,29 @@ void receiver(void)
     boost::asio::io_context io_context;
     tcp::acceptor acceptor {io_context, tcp::endpoint(tcp::v4(), Config::port)};
 
+    auto read_msg = [](tcp::socket socket)
+    {
+        std::string buf;
+        boost::system::error_code error;
+
+        boost::asio::read(socket, boost::asio::dynamic_buffer(buf), error);
+
+        if (!error || error == boost::asio::error::eof) {
+            auto now = std::time(nullptr);
+            buf.insert(0, std::ctime(&now));
+
+            message_queue.enqueue(buf);
+        } else {
+            /*
+             * Some error occured that I don't want to handle.
+             */
+            std::lock_guard<std::mutex> lock {Global::cerr_mutex};
+
+            std::cerr << "receiver(): " << error.message() << std::endl;
+        }
+    };
+
     for (;;) {
-        auto read_msg = [](tcp::socket socket)
-        {
-            std::string buf;
-            boost::system::error_code error;
-
-            boost::asio::read(socket, boost::asio::dynamic_buffer(buf), error);
-
-            if (!error || error == boost::asio::error::eof) {
-                auto now = std::time(nullptr);
-                buf.insert(0, std::ctime(&now));
-
-                message_queue.enqueue(buf);
-            } else {
-                /*
-                 * Some error occured that I don't want to handle.
-                 */
-                std::lock_guard<std::mutex> lock {Global::cerr_mutex};
-
-                std::cerr << "receiver(): " << error.message() << std::endl;
-            }
-        };
-
         tcp::socket socket {io_context};
 
         acceptor.accept(socket);
