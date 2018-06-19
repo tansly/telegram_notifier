@@ -45,7 +45,7 @@ void receiver(void)
     using boost::asio::ip::tcp;
 
     boost::asio::io_context io_context;
-    tcp::acceptor acceptor {io_context, tcp::endpoint(tcp::v4(), 6666)};
+    tcp::acceptor acceptor {io_context, tcp::endpoint(tcp::v4(), Config::port)};
 
     for (;;) {
         auto read_msg = [](tcp::socket socket)

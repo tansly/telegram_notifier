@@ -23,6 +23,8 @@ namespace Config {
 constexpr inline auto token = "";
 constexpr inline auto chat_id = "";
 
+constexpr inline unsigned short port = 6666;
+
 }
 
 #endif /* TELEGRAM_NOTIFIER_CONFIG_H */
