@@ -96,64 +96,40 @@ void transmitter(void)
     }
 }
 
-void update_handler(void)
-{
-    int offset = 0;
-    for (;;) {
-        auto maybe_updates = Bot::get_updates(offset);
-        if (maybe_updates) {
-            auto updates = *maybe_updates;
-            if (!updates["ok"].asBool()) {
-                continue;
-            }
-
-            auto results = updates["result"];
-            if (results.size() == 0) {
-                continue;
-            }
-
-            auto result = results[0];
-            offset = result["update_id"].asInt() + 1;
-
-            auto message = result["message"];
-            auto chat_id = message["chat"]["id"].asString();
-            if (chat_id != Config::chat_id) {
-                continue;
-            }
-
-            auto command = message["text"].asString();
-            /*
-             * TODO: Implement a callback mechanism?
-             */
-            if (command == "/pause") {
-                std::lock_guard<std::mutex> lock {transmit_mutex};
-
-                transmit = false;
-            } else if (command == "/continue") {
-                std::lock_guard<std::mutex> lock {transmit_mutex};
-
-                transmit = true;
-                transmit_cond.notify_one();
-            } else if (command == "/notifyoff") {
-                notify = false;
-            } else if (command == "/notifyon") {
-                notify = true;
-            }
-        }
-    }
-}
-
 }
 
 int main(int argc, char **argv)
 {
     std::thread receive_thread {receiver};
     std::thread transmit_thread {transmitter};
-    std::thread update_thread {update_handler};
+
+    Bot::register_callback("/pause", []
+            {
+                std::lock_guard<std::mutex> lock {transmit_mutex};
+                transmit = false;
+            });
+
+    Bot::register_callback("/continue", []
+            {
+                std::lock_guard<std::mutex> lock {transmit_mutex};
+                transmit = true;
+                transmit_cond.notify_one();
+            });
+
+    Bot::register_callback("/notifyoff", []
+            {
+                notify = false;
+            });
+
+    Bot::register_callback("/notifyon", []
+            {
+                notify = true;
+            });
+
+    Bot::update_handler();
 
     receive_thread.join();
     transmit_thread.join();
-    update_thread.join();
 
     return 0;
 }

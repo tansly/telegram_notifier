@@ -20,6 +20,7 @@
 #include "curl_handle.h"
 #include "global.h"
 
+#include <functional>
 #include <iostream>
 #include <json/json.h>
 #include <memory>
@@ -27,6 +28,7 @@
 #include <optional>
 #include <string>
 #include <sstream>
+#include <unordered_map>
 
 namespace {
 
@@ -35,6 +37,17 @@ constexpr auto bool_to_string(bool b)
     return b ? "true" : "false";
 }
 
+}
+
+namespace {
+
+std::unordered_map<std::string, std::function<void(void)>> callbacks;
+
+}
+
+void Bot::register_callback(std::string command, std::function<void(void)> callback)
+{
+    callbacks.insert_or_assign(std::move(command), std::move(callback));
 }
 
 void Bot::send_message(const std::string &message, bool notify)
@@ -88,4 +101,40 @@ std::optional<Json::Value> Bot::get_updates(int offset, int timeout)
     }
 
     return {updates};
+}
+
+void Bot::update_handler()
+{
+    int offset = 0;
+    for (;;) {
+        auto maybe_updates = get_updates(offset);
+        if (maybe_updates) {
+            auto updates = *maybe_updates;
+            if (!updates["ok"].asBool()) {
+                continue;
+            }
+
+            auto results = updates["result"];
+            if (results.size() == 0) {
+                continue;
+            }
+
+            auto result = results[0];
+            offset = result["update_id"].asInt() + 1;
+
+            auto message = result["message"];
+            auto chat_id = message["chat"]["id"].asString();
+            if (chat_id != Config::chat_id) {
+                continue;
+            }
+
+            auto command = message["text"].asString();
+            auto callback_it = callbacks.find(command);
+            if (callback_it == callbacks.end()) {
+                continue;
+            }
+
+            callback_it->second();
+        }
+    }
 }

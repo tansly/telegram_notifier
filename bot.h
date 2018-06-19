@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include <functional>
 #include <optional>
 #include <json/json.h>
 #include <string>
@@ -31,6 +32,18 @@ static const std::string bot_url = std::string("https://api.telegram.org/bot") +
 void send_message(const std::string &message, bool notify=true);
 
 std::optional<Json::Value> get_updates(int offset=0, int timeout=60);
+
+/*
+ * TODO: What if we want to pass parameters to callbacks?
+ */
+void register_callback(std::string command, std::function<void(void)> callback);
+
+/*
+ * Update handling loop for the bot.
+ * Blocks forever, polls updates and handles incoming commands using
+ * registered callbacks.
+ */
+void update_handler();
 
 }
 
