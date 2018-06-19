@@ -153,6 +153,7 @@ int main(int argc, char **argv)
 
     receive_thread.join();
     transmit_thread.join();
+    update_thread.join();
 
     return 0;
 }
