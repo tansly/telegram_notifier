@@ -58,7 +58,7 @@ void Bot::send_message(const std::string &message, bool notify)
     std::string result;
     auto code = Curl::perform(result, url);
     if (code != CURLE_OK) {
-        std::lock_guard<std::mutex> lock {Global::cerr_mutex};
+        std::lock_guard lock {Global::cerr_mutex};
 
         std::cerr << "Bot::send_message(): " << curl_easy_strerror(code) << std::endl;
     }
@@ -79,7 +79,7 @@ std::optional<Json::Value> Bot::get_updates(int offset, int timeout)
 
     auto code = Curl::perform(curl_result, url_stream.str());
     if (code != CURLE_OK) {
-        std::lock_guard<std::mutex> lock {Global::cerr_mutex};
+        std::lock_guard lock {Global::cerr_mutex};
 
         std::cerr << "Bot::get_updates(): " << curl_easy_strerror(code) << std::endl;
 
@@ -93,7 +93,7 @@ std::optional<Json::Value> Bot::get_updates(int offset, int timeout)
     if (!reader->parse(curl_result.c_str(), curl_result.c_str() + curl_result.size(),
                 &updates, &errors)) {
 
-        std::lock_guard<std::mutex> lock {Global::cerr_mutex};
+        std::lock_guard lock {Global::cerr_mutex};
 
         std::cerr << "Bot::get_updates(): " << errors << std::endl;
 

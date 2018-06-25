@@ -62,7 +62,7 @@ void receiver(void)
             /*
              * Some error occured that I don't want to handle.
              */
-            std::lock_guard<std::mutex> lock {Global::cerr_mutex};
+            std::lock_guard lock {Global::cerr_mutex};
 
             std::cerr << "receiver(): " << error.message() << std::endl;
         }
@@ -84,7 +84,7 @@ void transmitter(void)
     for (;;) {
         auto message = message_queue.dequeue();
 
-        std::unique_lock<std::mutex> transmit_lock {transmit_mutex};
+        std::unique_lock transmit_lock {transmit_mutex};
         transmit_cond.wait(transmit_lock, []{ return transmit; });
         transmit_lock.unlock();
 
@@ -101,13 +101,13 @@ int main(int argc, char **argv)
 
     Bot::register_callback("/pause", []
             {
-                std::lock_guard<std::mutex> lock {transmit_mutex};
+                std::lock_guard lock {transmit_mutex};
                 transmit = false;
             });
 
     Bot::register_callback("/continue", []
             {
-                std::lock_guard<std::mutex> lock {transmit_mutex};
+                std::lock_guard lock {transmit_mutex};
                 transmit = true;
                 transmit_cond.notify_one();
             });
