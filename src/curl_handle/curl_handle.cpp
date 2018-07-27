@@ -18,7 +18,7 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#include "curl_handle.h"
+#include "curl_handle/curl_handle.hpp"
 
 #include <cstdlib>
 

@@ -15,10 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TELEGRAM_NOTIFIER_BOT_H
-#define TELEGRAM_NOTIFIER_BOT_H
+#ifndef TELEGRAM_NOTIFIER_BOT_HPP
+#define TELEGRAM_NOTIFIER_BOT_HPP
 
-#include "config.h"
+#include "config.hpp"
 
 #include <functional>
 #include <optional>

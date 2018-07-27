@@ -15,13 +15,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "global.h"
+#ifndef TELEGRAM_NOTIFIER_CONFIG_HPP
+#define TELEGRAM_NOTIFIER_CONFIG_HPP
 
-#include <mutex>
+namespace Config {
 
-namespace Global {
+constexpr inline auto token = "";
+constexpr inline auto chat_id = "";
 
-std::mutex cout_mutex;
-std::mutex cerr_mutex;
+constexpr inline unsigned short port = 6666;
 
 }
+
+#endif /* TELEGRAM_NOTIFIER_CONFIG_H */

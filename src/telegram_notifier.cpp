@@ -15,11 +15,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "bot.h"
-#include "config.h"
-#include "curl_handle.h"
-#include "global.h"
-#include "queue.h"
+#include "bot/bot.hpp"
+#include "config.hpp"
+#include "curl_handle/curl_handle.hpp"
+#include "global/global.hpp"
+#include "queue/queue.hpp"
 
 #include <atomic>
 #include <json/json.h>

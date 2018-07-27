@@ -15,16 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TELEGRAM_NOTIFIER_GLOBAL_H
-#define TELEGRAM_NOTIFIER_GLOBAL_H
+#include "global/global.hpp"
 
 #include <mutex>
 
 namespace Global {
 
-extern std::mutex cout_mutex;
-extern std::mutex cerr_mutex;
+std::mutex cout_mutex;
+std::mutex cerr_mutex;
 
 }
-
-#endif /* TELEGRAM_NOTIFIER_GLOBAL_H */

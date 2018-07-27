@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TELEGRAM_NOTIFIER_QUEUE_H
-#define TELEGRAM_NOTIFIER_QUEUE_H
+#ifndef TELEGRAM_NOTIFIER_QUEUE_HPP
+#define TELEGRAM_NOTIFIER_QUEUE_HPP
 
 #include <condition_variable>
 #include <iostream>

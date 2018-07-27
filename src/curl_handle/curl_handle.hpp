@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef TELEGRAM_NOTIFIER_CURL_HANDLE_H
-#define TELEGRAM_NOTIFIER_CURL_HANDLE_H
+#ifndef TELEGRAM_NOTIFIER_CURL_HANDLE_HPP
+#define TELEGRAM_NOTIFIER_CURL_HANDLE_HPP
 
 #include <string>
 #include "curl/curl.h"

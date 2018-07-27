@@ -15,10 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config.h"
-#include "bot.h"
-#include "curl_handle.h"
-#include "global.h"
+#include "config.hpp"
+#include "bot/bot.hpp"
+#include "curl_handle/curl_handle.hpp"
+#include "global/global.hpp"
 
 #include <functional>
 #include <iostream>
