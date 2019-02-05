@@ -6,5 +6,5 @@ Sends whatever it receives in a Telegram message.
 
 # TODO
 
-* Configuration: Use a config file for port configuration, API key etc.
+* Configuration: Use a config file for configuration; port, API key etc.
 * What else?
