@@ -37,6 +37,11 @@ constexpr auto bool_to_string(bool b)
     return b ? "true" : "false";
 }
 
+auto bot_url()
+{
+    return std::string("https://api.telegram.org/bot") + Config::token + "/";
+}
+
 }
 
 namespace {
@@ -52,8 +57,9 @@ void Bot::register_callback(std::string command, std::function<void(void)> callb
 
 void Bot::send_message(const std::string &message, bool notify)
 {
-    auto url = bot_url + "sendMessage?chat_id=" + Config::chat_id +
-        "&disable_notification=" + bool_to_string(!notify) + "&text=" + Curl::escape(message);
+    auto url = bot_url() + "sendMessage?chat_id=" + Config::chat_id +
+        "&disable_notification=" + bool_to_string(!notify) + "&text=" +
+        Curl::escape(message);
 
     std::string result;
     auto code = Curl::perform(result, url);
@@ -72,7 +78,7 @@ void Bot::send_message(const std::string &message, bool notify)
 std::optional<Json::Value> Bot::get_updates(int offset, int timeout)
 {
     std::string curl_result;
-    std::ostringstream url_stream {bot_url + "getUpdates?", std::ios_base::ate};
+    std::ostringstream url_stream {bot_url() + "getUpdates?", std::ios_base::ate};
 
     url_stream << "timeout=" << timeout << '&';
     url_stream << "offset=" << offset << '&';

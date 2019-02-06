@@ -27,8 +27,6 @@
 
 namespace Bot {
 
-static const std::string bot_url = std::string("https://api.telegram.org/bot") + Config::token + "/";
-
 void send_message(const std::string &message, bool notify=true);
 
 std::optional<Json::Value> get_updates(int offset=0, int timeout=60);

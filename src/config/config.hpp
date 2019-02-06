@@ -31,6 +31,9 @@ namespace Config {
  */
 bool parse_config(std::string path = "/etc/telegrambotd.conf");
 
+/*
+ * Set by parse_config(), according to the config file.
+ */
 inline std::string token;
 inline std::string chat_id;
 

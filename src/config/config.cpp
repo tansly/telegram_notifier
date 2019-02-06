@@ -16,14 +16,35 @@
 */
 
 #include "config/config.hpp"
-#include <string>
 #include <fstream>
+#include <iostream>
+#include <string>
 
 namespace Config {
 
+/*
+ * TODO: Design a proper config file syntax.
+ * Right now it is only the API token followed by chat id, seperated by whitespace.
+ */
 bool parse_config(std::string path)
 {
-    return false;
+    std::ifstream file {path};
+    if (!file.is_open()) {
+        std::cerr << "parse_config(): Failed to open file " << path << '\n';
+        return false;
+    }
+
+    if (!(file >> Config::token)) {
+        std::cerr << "parse_config(): Failed to read token\n";
+        return false;
+    }
+
+    if (!(file >> Config::chat_id)) {
+        std::cerr << "parse_config(): Failed to read chat id\n";
+        return false;
+    }
+
+    return true;
 }
 
 }
