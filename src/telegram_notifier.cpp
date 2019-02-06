@@ -16,7 +16,7 @@
 */
 
 #include "bot/bot.hpp"
-#include "config.hpp"
+#include "config/config.hpp"
 #include "curl_handle/curl_handle.hpp"
 #include "global/global.hpp"
 #include "queue/queue.hpp"
@@ -96,6 +96,14 @@ void transmitter(void)
 
 int main(int argc, char **argv)
 {
+    /*
+     * TODO: Get config file name from command line arguments.
+     */
+    if (!Config::parse_config()) {
+        std::cerr << "parse_config(): Failed to parse config file\n";
+        return 1;
+    }
+
     std::thread receive_thread {receiver};
     std::thread transmit_thread {transmitter};
 
@@ -122,10 +130,12 @@ int main(int argc, char **argv)
                 notify = true;
             });
 
+    /*
+     * Main thread deals with update handling, here.
+     */
+
     Bot::update_handler();
-
-    receive_thread.join();
-    transmit_thread.join();
-
-    return 0;
+    /*
+     * Does not return
+     */
 }

@@ -26,6 +26,9 @@ set (CURL_HANDLE_SOURCES
 set (GLOBAL_SOURCES
     src/global/global.cpp
     )
+set (CONFIG_SOURCES
+    src/config/config.cpp
+    )
 set (TELEGRAM_NOTIFIER_SOURCES
     src/telegram_notifier.cpp
     )
@@ -39,7 +42,10 @@ add_library (curl_handle_lib
 add_library (global_lib
     ${GLOBAL_SOURCES}
     )
+add_library (config_lib
+    ${CONFIG_SOURCES}
+    )
 
 add_executable (telegrambotd ${TELEGRAM_NOTIFIER_SOURCES})
 # XXX: Why the fuck -ljsoncpp is not added? This crap is completely braindead.
-target_link_libraries (telegrambotd bot_lib global_lib curl_handle_lib ${CURL_LIBRARIES} ${Boost_SYSTEM_LIBRARIES} ${JSONCPP_LIBRARIES} Threads::Threads -ljsoncpp)
+target_link_libraries (telegrambotd bot_lib global_lib config_lib curl_handle_lib ${CURL_LIBRARIES} ${Boost_SYSTEM_LIBRARIES} ${JSONCPP_LIBRARIES} Threads::Threads -ljsoncpp)

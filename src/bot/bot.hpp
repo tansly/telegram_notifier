@@ -18,7 +18,7 @@
 #ifndef TELEGRAM_NOTIFIER_BOT_HPP
 #define TELEGRAM_NOTIFIER_BOT_HPP
 
-#include "config.hpp"
+#include "config/config.hpp"
 
 #include <functional>
 #include <optional>

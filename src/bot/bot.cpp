@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config.hpp"
+#include "config/config.hpp"
 #include "bot/bot.hpp"
 #include "curl_handle/curl_handle.hpp"
 #include "global/global.hpp"

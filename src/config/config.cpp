@@ -15,16 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TELEGRAM_NOTIFIER_CONFIG_HPP
-#define TELEGRAM_NOTIFIER_CONFIG_HPP
+#include "config/config.hpp"
+#include <string>
+#include <fstream>
 
 namespace Config {
 
-constexpr inline auto token = "";
-constexpr inline auto chat_id = "";
-
-constexpr inline unsigned short port = 6666;
-
+bool parse_config(std::string path)
+{
+    return false;
 }
 
-#endif /* TELEGRAM_NOTIFIER_CONFIG_H */
+}
