@@ -4,6 +4,11 @@ A Telegram bot that I use to send notifications from my servers to my phone.
 Listens TCP port 6666 on the machine for "notifications", which are (hopefully) plain text.
 Sends whatever it receives in a Telegram message.
 
+# Requirements
+* Boost
+* jsoncpp
+* cmake
+
 # TODO
 
 * Configuration: Use a config file for configuration; port, API key etc.
